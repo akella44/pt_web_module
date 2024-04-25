@@ -1,0 +1,33 @@
+version: '3'
+services:
+  web:
+    build: ./core
+    ports:
+      - "8080:80"
+    environment:
+      - DB_HOST=database
+      - DB_USER=arklim
+      - DB_PASSWORD=qwerty123
+      - DB_TABLE_NAME=myservice
+    depends_on:
+      - database
+    networks:
+      - default
+
+  database:
+    image: postgres
+    environment:
+      - POSTGRES_DB=myservice
+      - POSTGRES_USER=arklim
+      - POSTGRES_PASSWORD=qwerty123
+    ports:
+      - '5432:5432'
+    volumes:
+      - ./psql-data:/var/lib/postgresql/data
+    networks:
+    - default
+
+networks:
+  default:
+volumes:
+  database:
