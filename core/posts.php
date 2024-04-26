@@ -8,7 +8,8 @@ if (!isset($_COOKIE['Username'])){
     echo "<body><div class='container'><h1> Авторизуйтесь, чтобы увдиеть статью </h1></body></div>";
 } else{
     $id = $_GET['id'];
-
+    settype($id, 'integer');
+    
     $link = ("host=$servername port=5432 dbname=$dbname user=$username password=$password");
     $conn = pg_connect($link) or die('Could not connect: '.pg_last_error());
 
