@@ -17,7 +17,7 @@
     </div>
     <div class="container">
         <h2>Создать пост</h2>
-        <form method="POST" action="profile.php">
+        <form method="POST" action="profile.php" enctype="multipart/form-data" name="upload">
             <div class="form-group">
                 <label for="title">Заголовок:</label>
                 <input type="text" id="title" class="form-control" name="title" placeholder="Введите заголовок">
@@ -51,15 +51,6 @@ $dbname = getenv('DB_TABLE_NAME');
 $link = ("host=$servername port=5432 dbname=$dbname user=$username password=$password");
 $conn = pg_connect($link) or die('Could not connect: '. pg_last_error());
 
-if (isset($_POST['submit'])){
-    $title = $_POST['title'];
-    $main_text = $_POST['text'];
-
-    if(!$title || !$main_text) die("Заполните все поля");
-    $sql = "INSERT INTO posts (title, main_text) VALUES ('$title', '$main_text')";
-    if(!pg_query($conn, $sql)) die("Не удалось добавить пост ".pg_last_error());
-}
-
 if(!empty($_FILES["file"])){
     if (((@$_FILES["file"]["type"] == "image/gif") || (@$_FILES["file"]["type"] == "image/jpeg")
     || (@$_FILES["file"]["type"] == "image/jpg") || (@$_FILES["file"]["type"] == "image/pjpeg")
@@ -71,7 +62,18 @@ if(!empty($_FILES["file"])){
     }
     else
     {
-        echo "upload failed!";
+        echo "Upload failed!";
+        return;
     }
 }
+
+if (isset($_POST['submit'])){
+    $title = $_POST['title'];
+    $main_text = $_POST['text'];
+
+    if(!$title || !$main_text) die("Заполните все поля");
+    $sql = "INSERT INTO posts (title, main_text) VALUES ('$title', '$main_text')";
+    if(!pg_query($conn, $sql)) die("Не удалось добавить пост ".pg_last_error());
+}
+
 ?>
